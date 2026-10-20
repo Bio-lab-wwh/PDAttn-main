@@ -7,8 +7,6 @@
 - **Level 1 — gene-level conditioning:** perturbation features **modulate** gene representations (FiLM-style conditioning) so the model encodes **perturbation-aligned, gene-resolution** responses.
 - **Level 2 — context-aware injection:** perturbation features are combined with **cell background** information to form a context vector, which is injected into gene representations to capture **perturbation effects that vary across cellular contexts**.
 
-Place the architecture figure at the path below so it renders on GitHub and locally:
-
 ![PDAttn architecture](img/PDAttn%20Model.png)
 
 For splits and PyG dataloaders, this codebase follows conventions aligned with **GEARS**, enabling fair comparison with existing perturbation baselines: [snap-stanford/GEARS](https://github.com/snap-stanford/GEARS).
@@ -114,16 +112,7 @@ the checkpoint after every epoch; the released paper checkpoint is therefore the
 
 The reproducibility configuration is a **single globally fixed configuration**:
 `d=64`, `H=4`, `k_go=20`, and `lambda_CDF=0.2` are applied unchanged to every
-dataset. The released training command does not perform a dataset-specific grid search
-and does not select different hyperparameters from validation data. This distinction is
-important: the values above reproduce the reported model, whereas a sensitivity study
-is a separate experiment and must state its candidate set and selection criterion
-explicitly. The repository does not claim candidate values or sensitivity results that
-were not actually run.
-
-For future sensitivity analyses, each candidate must retain the same split and seed and
-should be compared using one prespecified validation statistic (for example, validation
-PCC on DE20 genes). Test data must not be used for hyperparameter selection.
+dataset. 
 
 ### 3.4 Training CLI — `task/train_model.py`
 
@@ -230,7 +219,7 @@ python -m task.train_model \
   --seed 42
 ```
 
-From the repository root, `python -m task.<module>` requires this directory on `PYTHONPATH` (the current working directory is enough when you `cd` here). Nested packages (`PDAttn`, `data_tools`, `tools`) do not ship `__init__.py` files; this is valid on **Python 3.3+** via [namespace packages](https://docs.python.org/3/reference/import.html#namespace-packages).
+From the repository root, `python -m task.<module>` requires this directory on `PYTHONPATH` . Nested packages (`PDAttn`, `data_tools`, `tools`) do not ship `__init__.py` files; this is valid on **Python 3.3+** via [namespace packages](https://docs.python.org/3/reference/import.html#namespace-packages).
 
 ---
 
@@ -261,30 +250,13 @@ universe used by graph construction (the loader downloads them when they are abs
 The training command recreates the paper's `simulation` split with seed 42. Do not combine
 checkpoints and evaluation splits generated with different seeds.
 
-For provenance, record both the Zenodo record identifier and the exact source revision:
-
-```bash
-git rev-parse HEAD
-python --version
-python -c "import torch, torch_geometric; print(torch.__version__, torch.version.cuda, torch_geometric.__version__)"
-pip freeze > environment-used.txt
-```
-
-The dependency ranges are declared in [`requirements.txt`](requirements.txt). For a
-paper reproduction run, retain `environment-used.txt` together with the checkpoint and
-command log so that the resolved package versions are auditable.
-
-## 7. Versioned releases, figure scripts, and license status
+## 7. Versioned releases, and license status
 
 - **Versioning.** Manuscript results should cite an immutable tagged release or commit
   SHA, not a moving branch. Create the publication tag only after the code, commands,
   processed-data link, and figure scripts have been frozen; archive that exact tag with
   the manuscript release.
-- **Evaluation and figure provenance.** `task/analysis_pearson.py` produces the numerical
-  evaluation outputs. Every manuscript plotting script should be included in the tagged
-  publication release and should consume saved numerical outputs rather than rerunning
-  model inference. Figure filenames and their generating commands should be listed in
-  the release notes.
+
 - **License.** PDAttn is distributed under the [MIT License](LICENSE), matching the
   license published with the public GitHub repository. Retain the license file in every
   tagged release and archived source package.
@@ -293,7 +265,7 @@ command log so that the resolved package versions are auditable.
 
 ## Citation
 
-A BibTeX entry and DOI will be added here after the manuscript is published.
+DOI will be added here after the manuscript is published.
 
 ---
 
